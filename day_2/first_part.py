@@ -1,6 +1,9 @@
 import re
 from typing import List
 
+
+PATTERN = re.compile(r'(?P<mini>\d+)-(?P<maxi>\d+)\s(?P<letter>\w):\s(?P<password>\w+)')
+
 class Policy:
     def __init__(self, letter: str, mini: int, maxi: int):
         self.letter = letter
@@ -26,7 +29,7 @@ class Entry:
 
 
 def parseEntry(entry: str) -> Entry:
-    match = re.search(r'(?P<mini>\d+)-(?P<maxi>\d+)\s(?P<letter>\w):\s(?P<password>\w+)', entry)
+    match = PATTERN.search(entry)
     if match:
         policy = Policy(match.group('letter'), int(match.group('mini')), int(match.group('maxi')))
         return Entry(match.group('password'), policy)
