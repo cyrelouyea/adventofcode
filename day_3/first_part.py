@@ -74,6 +74,9 @@ class TreeMap:
         return Toboggan(self, slope, location)
 
 
+def nb_trees_with_slope(tree_map: TreeMap, slope: Slope):
+    return sum(1 for block in tree_map.toboggan(Slope(3, 1)) if block == TREE)
+
 entries = []
 
 entry = input()
@@ -82,6 +85,6 @@ while entry != '-':
     entry = input()
 
 tree_map = TreeMap(entries)
-nb_trees = sum(1 for block in tree_map.toboggan(Slope(3, 1)) if block == TREE)
+nb_trees = nb_trees_with_slope(tree_map, Slope(3, 1))
 
 print("solution:", nb_trees)
