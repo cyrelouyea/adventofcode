@@ -1,3 +1,6 @@
+import itertools
+import math
+
 SUM_TO_FIND = 2020
 
 entries = []
@@ -7,12 +10,9 @@ while entry != -1:
     entries.append(entry)
     entry = int(input())
 
-len_entry = len(entries)
-for i in range(len_entry):
-    for j in range(i+1, len_entry):
-        for k in range(j+1, len_entry):
-            if entries[i] + entries[j] + entries[k] == SUM_TO_FIND:
-                print("solution:", entries[i] * entries[j] * entries[k])
-        
 
+for comb in itertools.combinations(entries, 3):
+    if sum(comb) == SUM_TO_FIND:
+        print("solution:", math.prod(comb))
+        break
 
