@@ -28,11 +28,10 @@ def eyr(s: str) -> bool:
         
 
 def hgt(s: str) -> bool:
-    unit = s[-2:]
     try:
-        if unit == 'cm':
+        if s.endswith('cm'):
             return 150 <= int(s[:-2]) <= 193
-        elif unit == 'in':
+        elif s.endswith('in'):
             return 59 <= int(s[:-2]) <= 76
         else:
             return False
