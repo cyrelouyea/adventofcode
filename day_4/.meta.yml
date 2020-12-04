@@ -1,0 +1,10 @@
+parts:
+  - main: 
+    - filename: "first_part.py"
+      language: "python"
+  - main:
+    - filename: "second_part.py"
+      language: "python"
+    - filename: "rules.py"
+      language: "python"
+statement: "puzzle.md"
