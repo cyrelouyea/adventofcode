@@ -29,20 +29,21 @@ class Entry:
         return f"(Entry: password='{self.password}', policy={self.policy}, valid={self.is_pwd_valid()})"
 
 
-def parseEntry(entry: str) -> Entry:
-    match = PATTERN.search(entry)
-    if match:
-        policy = Policy(match.group('letter'), int(match.group('mini')), int(match.group('maxi')))
-        return Entry(match.group('password'), policy)
-    else:
-        raise Exception(entry)
+    @classmethod
+    def parse_entry(cls, entry: str) -> 'Entry':
+        match = PATTERN.search(entry)
+        if match:
+            policy = Policy(match.group('letter'), int(match.group('mini')), int(match.group('maxi')))
+            return Entry(match.group('password'), policy)
+        else:
+            raise Exception(entry)
 
 
 entries: List[Entry] = []
 
 entry = input()
 while entry != '-':
-    entries.append(parseEntry(entry))
+    entries.append(Entry.parse_entry(entry))
     entry = input()
 
 nb_valids = sum(1 for entry in entries if entry.is_pwd_valid())
