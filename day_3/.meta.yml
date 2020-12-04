@@ -1,8 +1,8 @@
 parts:
-  - main: 
+  - files: 
     - filename: "first_part.py"
       language: "python"
-  - main:
+  - files:
     - filename: "second_part.py"
       language: "python"
 statement: "puzzle.md"
