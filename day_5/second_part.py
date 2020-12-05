@@ -48,25 +48,25 @@ class Plane:
         return 1 << (self._nb_bits_column + self._nb_bits_row)
 
 
-def find_my_seat_id(plane: Plane, seats: List[Seat]) -> int:
-    """
-    First solution: create an array of used seats by id
-      - id x -> index x in used_seats array
-    Advantage: linear time complexity
-    Disadvantage: exponential use of memory 
-      - size of used_seat depends on the number of bits
-      - for this problem, the number of seats is low therefore we can afford to use
-      this solution
-    """
-    used_seats = [False] * plane.get_nb_seats()
-    for seat in seats:
-        used_seats[plane.get_seat_id(seat)] = True
+# def find_my_seat_id(plane: Plane, seats: List[Seat]) -> int:
+#     """
+#     First solution: create an array of used seats by id
+#       - id x -> index x in used_seats array
+#     Advantage: linear time complexity
+#     Disadvantage: exponential use of memory 
+#       - size of used_seat depends on the number of bits
+#       - for this problem, the number of seats is low therefore we can afford to use
+#       this solution
+#     """
+#     used_seats = [False] * plane.get_nb_seats()
+#     for seat in seats:
+#         used_seats[plane.get_seat_id(seat)] = True
 
-    for i in range(1, len(used_seats)-1):
-        if used_seats[i-1] and not used_seats[i] and used_seats[i+1]:
-            return i
+#     for i in range(1, len(used_seats)-1):
+#         if used_seats[i-1] and not used_seats[i] and used_seats[i+1]:
+#             return i
 
-    raise ValueError()
+#     raise ValueError()
 
 # def find_my_seat_id(plane: Plane, seats: List[Seat]) -> int:
 #     """
@@ -84,6 +84,15 @@ def find_my_seat_id(plane: Plane, seats: List[Seat]) -> int:
 
 #     raise ValueError()
 
+def find_my_seat_id(plane: Plane, seats: List[Seat]) -> int:
+    """
+    Third solution: use the fact that the flight is full
+    Only my seat is missing -> only need to find the missing id
+    between the min and max ids.
+    Time complexity is linear (search for min and max) 
+    """ 
+    seat_ids = [plane.get_seat_id(seat) for seat in seats]
+    return set(range(min(seat_ids), max(seat_ids)+1)).difference(seat_ids).pop()
 
 NB_BITS_ROW = 7
 NB_BITS_COLUMN = 3
