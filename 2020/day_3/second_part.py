@@ -1,3 +1,4 @@
+import math
 from functools import reduce
 from typing import List
 
@@ -100,6 +101,10 @@ solution = reduce(
     lambda value, slope: value * nb_trees_with_slope(tree_map, slope),
     SLOPES,
     1
+)
+
+solution = math.prod(
+    (nb_trees_with_slope(tree_map, slope) for slope in SLOPES)
 )
 
 print("solution:", solution)
