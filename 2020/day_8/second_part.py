@@ -66,8 +66,6 @@ class Program:
 
 
     def _execute_instruction(self, instruction: Instruction, state: ProgramState) -> ProgramState:
-        line = state.line
-        accumulator = state.accumulator
         return getattr(instruction, instruction.operation)(state)
     
 
