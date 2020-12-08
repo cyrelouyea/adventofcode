@@ -1,6 +1,11 @@
 from typing import List, NamedTuple, Set
 
 
+class ProgramState(NamedTuple):
+    accumulator: int
+    line: int
+        
+
 class Instruction:
 
     def __init__(self, operation: str, argument: int):
@@ -18,21 +23,37 @@ class Instruction:
     def __repr__(self) -> str:
         return f"(Instruction: operation='{self._operation}', argument={self.argument})"
 
+    def nop(self, state: ProgramState) -> ProgramState:
+        return ProgramState(
+            accumulator=state.accumulator, 
+            line=state.line+1
+        )
+
+    def acc(self, state: ProgramState) -> ProgramState:
+        return ProgramState(
+            accumulator=state.accumulator + self.argument, 
+            line=state.line+1
+        )
+
+    def jmp(self, state: ProgramState) -> ProgramState:
+        return ProgramState(
+            accumulator=state.accumulator, 
+            line=state.line + self.argument
+        )
 
 
 class Instructions(List[Instruction]):
     pass
 
 
-class ProgramState(NamedTuple):
-    accumulator: int
-    line: int
-        
-
 class Program:
 
     def __init__(self, instructions: Instructions):
         self._instructions = instructions
+
+    @property
+    def instructions(self) -> Instructions:
+        return self._instructions
 
 
     def __iter__(self):
@@ -43,23 +64,12 @@ class Program:
             state = self._execute_instruction(self._instructions[state.line], state)
             yield state
 
-        raise StopIteration()
-    
 
     def _execute_instruction(self, instruction: Instruction, state: ProgramState) -> ProgramState:
         line = state.line
         accumulator = state.accumulator
-
-        if instruction.operation == 'nop':
-            line += 1
-        elif instruction.operation == 'acc':
-            line += 1
-            accumulator += instruction.argument
-        elif instruction.operation == 'jmp':
-            line += instruction.argument
-
-        return ProgramState(accumulator=accumulator, line=line)
-
+        return getattr(instruction, instruction.operation)(state)
+    
 
 def parse_instruction(entry: str) -> Instruction:
     splitted_entry = entry.split()
