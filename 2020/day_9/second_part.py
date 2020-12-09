@@ -22,6 +22,7 @@ while new_number != -1:
             break
     else:
         invalid_number = new_number 
+        list_numbers.append(new_number)
         break
     new_number = int(input())
 
