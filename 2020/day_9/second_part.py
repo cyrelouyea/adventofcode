@@ -29,7 +29,7 @@ class XmasCode():
         self._code.append(number)
         return self._deque.popleft()
 
-    def find_contiguous_range_slice(self) -> slice:
+    def find_contiguous_set_slice(self) -> slice:
         if self._invalid_number is None:
             raise Exception("no invalid number")
 
@@ -59,6 +59,6 @@ while new_number != -1:
     code.add(new_number)
     new_number = int(input())
 
-contiguous_set_slice = code.find_contiguous_range_slice()
+contiguous_set_slice = code.find_contiguous_set_slice()
 contiguous_set = code[contiguous_set_slice]
 print("solution:", min(contiguous_set) + max(contiguous_set))
