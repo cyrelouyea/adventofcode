@@ -53,7 +53,7 @@ class XmasCode():
 code = XmasCode(
     (int(input()) for i in range(PREAMBLE_LENGTH))
 )
-list()
+
 new_number = int(input())
 while new_number != -1:
     code.add(new_number)
