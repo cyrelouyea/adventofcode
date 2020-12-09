@@ -12,7 +12,7 @@ class XmasCode():
 
     def __init__(self, data: Iterable[int]):
         self._deque = deque(data)
-        self._list_numbers = list(data)
+        self._code = list(data)
         self._invalid_number = None
 
     @property
@@ -26,15 +26,15 @@ class XmasCode():
         if self._invalid_number is None and not self._is_number_valid(number):
             self._invalid_number = number
         self._deque.append(number)
-        self._list_numbers.append(number)
+        self._code.append(number)
         return self._deque.popleft()
 
     def find_contiguous_range_set(self) -> range:
         if self._invalid_number is None:
             raise Exception("no invalid number")
 
-        for first_index, last_index in combinations(range(len(self._list_numbers)), 2):
-            contiguous_set = self._list_numbers[first_index:last_index+1]
+        for first_index, last_index in combinations(range(len(self._code)), 2):
+            contiguous_set = self._code[first_index:last_index+1]
             if sum(contiguous_set) == self._invalid_number:
                 return range(first_index, last_index)
 
@@ -47,7 +47,7 @@ class XmasCode():
         return False
 
     def __getitem__(self, i):
-        return self._list_numbers[i]
+        return self._code[i]
 
 
 code = XmasCode(
