@@ -1,5 +1,6 @@
 from typing import List
 
+
 MAX_DIFF = 3
 
 adapters: List[int] = [0]

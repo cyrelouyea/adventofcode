@@ -1,7 +1,7 @@
 from typing import List
 
 
-MAX_DIFF = 4
+MAX_DIFF = 3
 
 differences = [0] * MAX_DIFF
 adapters = [0]
