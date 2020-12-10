@@ -19,5 +19,5 @@ for i in range(len(adapters)-1, -1, -1):
         nb_arrangements[i-j] += nb_arrangements[i]
         j += 1
 
-print("solutions:", nb_arrangements[0])
+print("solution:", nb_arrangements[0])
 
