@@ -1,3 +1,4 @@
 languages:
   - name: Python
     folder: python
+statement: "puzzle.md"

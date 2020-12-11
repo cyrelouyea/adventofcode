@@ -7,4 +7,3 @@ parts:
       language: "python"
     - filename: "rules.py"
       language: "python"
-statement: "puzzle.md"
