@@ -75,30 +75,28 @@ class Ferry:
         return True
 
     def __iter__(self):
-
-        def next_status(location) -> Seat:
-            seat = self._get_seat(location)
-            if seat == Seat.FLOOR:
-                return seat
-            adj_seats = self._get_adjacent_seats(location)
-            nb_occupied_seats = adj_seats.count(Seat.OCCUPIED)
-            if seat == Seat.EMPTY and nb_occupied_seats == 0:
-                self._is_stabilized = False
-                return Seat.OCCUPIED
-            elif seat == Seat.OCCUPIED and nb_occupied_seats >= 4:
-                self._is_stabilized = False
-                return Seat.EMPTY
-            else:
-                return seat
-
         while not self._is_stabilized:
             self._is_stabilized = True
             yield self._layout
             self._layout = [
-                [next_status(Location(row=row, col=col)) for col in range(self.nb_columns(row))]
+                [self._next_seat_status(Location(row=row, col=col)) for col in range(self.nb_columns(row))]
                 for row in range(self.nb_rows())
             ]
 
+    def _next_seat_status(self, location: Location) -> Seat:
+        seat = self._get_seat(location)
+        if seat == Seat.FLOOR:
+            return seat
+        adj_seats = self._get_adjacent_seats(location)
+        nb_occupied_seats = adj_seats.count(Seat.OCCUPIED)
+        if seat == Seat.EMPTY and nb_occupied_seats == 0:
+            self._is_stabilized = False
+            return Seat.OCCUPIED
+        elif seat == Seat.OCCUPIED and nb_occupied_seats >= 4:
+            self._is_stabilized = False
+            return Seat.EMPTY
+        else:
+            return seat
 
 def parse_row(row: str) -> List[Seat]:
     return [Seat(el) for el in row]
