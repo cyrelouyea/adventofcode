@@ -86,7 +86,7 @@ class Ferry:
                 for col in range(self.nb_columns(row)):
                     location = Location(row=row, col=col)
                     seat = self._get_seat(location)
-                    if seat == Seat.OCCUPIED:
+                    if seat == Seat.FLOOR:
                         continue
                     adj_seats = self._get_adjacent_seats(location)
                     if seat == Seat.EMPTY and adj_seats.count(Seat.OCCUPIED) == 0:
