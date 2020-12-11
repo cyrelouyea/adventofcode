@@ -125,8 +125,5 @@ while row != '-':
 
 ferry = Ferry(layout)
 
-time_start = datetime.datetime.now()
 for _ in ferry: pass
-time_end = datetime.datetime.now()
-print(time_end - time_start) 
 print(ferry.get_nb_seat_type(Seat.OCCUPIED))
