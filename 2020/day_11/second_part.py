@@ -1,6 +1,6 @@
 from typing import List, NamedTuple
 from enum import Enum
-
+import datetime
 
 class Seat(str, Enum):
     FLOOR = '.'
@@ -49,6 +49,7 @@ class Ferry:
             [Seat(el) for el in row] 
             for row in layout
         ]
+        self._is_stabilized = False
 
     def nb_rows(self) -> int:
         return len(self._layout)
@@ -85,28 +86,29 @@ class Ferry:
         return True
 
     def __iter__(self):
-        has_state_changed = True
-        while has_state_changed:
-            has_state_changed = False
+        
+        def next_status(location) -> Seat:
+            seat = self._get_seat(location)
+            if seat == Seat.FLOOR:
+                return seat
+            adj_seats = self._get_adjacent_seats(location)
+            nb_occupied_seats = adj_seats.count(Seat.OCCUPIED)
+            if seat == Seat.EMPTY and nb_occupied_seats == 0:
+                self._is_stabilized = False
+                return Seat.OCCUPIED
+            elif seat == Seat.OCCUPIED and nb_occupied_seats >= 5:
+                self._is_stabilized = False
+                return Seat.EMPTY
+            else:
+                return seat
+
+        while not self._is_stabilized:
+            self._is_stabilized = True
             yield self._layout
-            next_layout = [
-                [el for el in row]
-                for row in self._layout
+            self._layout = [
+                [next_status(Location(row=row, col=col)) for col in range(self.nb_columns(row))]
+                for row in range(self.nb_rows())
             ]
-            for row in range(self.nb_rows()):
-                for col in range(self.nb_columns(row)):
-                    location = Location(row=row, col=col)
-                    seat = self._get_seat(location)
-                    if seat == Seat.FLOOR:
-                        continue
-                    adj_seats = self._get_adjacent_seats(location)
-                    if seat == Seat.EMPTY and adj_seats.count(Seat.OCCUPIED) == 0:
-                        next_layout[location.row][location.col] = Seat.OCCUPIED
-                        has_state_changed = True
-                    elif seat == Seat.OCCUPIED and adj_seats.count(Seat.OCCUPIED) >= 5:
-                        next_layout[location.row][location.col] = Seat.EMPTY
-                        has_state_changed = True
-            self._layout = next_layout
 
 
 
@@ -120,6 +122,11 @@ while row != '-':
     layout.append(parse_row(row))
     row = input()
 
+
 ferry = Ferry(layout)
+
+time_start = datetime.datetime.now()
 for _ in ferry: pass
+time_end = datetime.datetime.now()
+print(time_end - time_start) 
 print(ferry.get_nb_seat_type(Seat.OCCUPIED))

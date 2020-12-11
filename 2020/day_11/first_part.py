@@ -1,4 +1,4 @@
-from typing import List, NamedTuple
+from typing import List, NamedTuple, Generator, Callable, Iterator
 from enum import Enum
 
 
@@ -47,6 +47,7 @@ class Ferry:
             [Seat(el) for el in row] 
             for row in layout
         ]
+        self._is_stabilized = False
 
     def nb_rows(self) -> int:
         return len(self._layout)
@@ -61,7 +62,7 @@ class Ferry:
         return self._layout[location.row][location.col]
 
     def _get_adjacent_seats(self, location: Location) -> List[Seat]:
-        return [self._layout[location.row + l.row][location.col + l.col] for l in self._get_adjacent_locations(location)]
+        return [self._get_seat(location + l) for l in self._get_adjacent_locations(location)]
 
     def _get_adjacent_locations(self, location: Location) -> List[Location]:
         return [l for l in self.ADJACENT_LOCATIONS if self._is_location_within_limits(location + l)]
@@ -74,29 +75,29 @@ class Ferry:
         return True
 
     def __iter__(self):
-        has_state_changed = True
-        while has_state_changed:
-            has_state_changed = False
-            yield self._layout
-            next_layout = [
-                [el for el in row]
-                for row in self._layout
-            ]
-            for row in range(self.nb_rows()):
-                for col in range(self.nb_columns(row)):
-                    location = Location(row=row, col=col)
-                    seat = self._get_seat(location)
-                    if seat == Seat.FLOOR:
-                        continue
-                    adj_seats = self._get_adjacent_seats(location)
-                    if seat == Seat.EMPTY and adj_seats.count(Seat.OCCUPIED) == 0:
-                        next_layout[location.row][location.col] = Seat.OCCUPIED
-                        has_state_changed = True
-                    elif seat == Seat.OCCUPIED and adj_seats.count(Seat.OCCUPIED) >= 4:
-                        next_layout[location.row][location.col] = Seat.EMPTY
-                        has_state_changed = True
-            self._layout = next_layout
 
+        def next_status(location) -> Seat:
+            seat = self._get_seat(location)
+            if seat == Seat.FLOOR:
+                return seat
+            adj_seats = self._get_adjacent_seats(location)
+            nb_occupied_seats = adj_seats.count(Seat.OCCUPIED)
+            if seat == Seat.EMPTY and nb_occupied_seats == 0:
+                self._is_stabilized = False
+                return Seat.OCCUPIED
+            elif seat == Seat.OCCUPIED and nb_occupied_seats >= 4:
+                self._is_stabilized = False
+                return Seat.EMPTY
+            else:
+                return seat
+
+        while not self._is_stabilized:
+            self._is_stabilized = True
+            yield self._layout
+            self._layout = [
+                [next_status(Location(row=row, col=col)) for col in range(self.nb_columns(row))]
+                for row in range(self.nb_rows())
+            ]
 
 
 def parse_row(row: str) -> List[Seat]:
