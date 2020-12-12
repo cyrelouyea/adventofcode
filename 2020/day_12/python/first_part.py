@@ -1,3 +1,5 @@
+from typing import Tuple
+
 cos = {
     0: 1,
     90: 0,
@@ -12,22 +14,26 @@ sin = {
     270: -1
 }
 
-def r(deg):
+def mat_rot(deg):
     return (
         (cos[deg], -sin[deg]),
         (sin[deg], cos[deg]),
     )
 
-def l(deg):
-    return r(360 - deg)
+def rotate(d: Tuple[int, int], r: int) -> Tuple[int, int]:
+    rot = mat_rot(r)
+    return (
+        d[0] * rot[0][0] + d[1] * rot[0][1], 
+        d[0] * rot[1][0] + d[1] * rot[1][1]
+    )
 
 actions = {
     'N': lambda val, p, d: ((p[0], p[1] - val), d),
     'S': lambda val, p, d: ((p[0], p[1] + val), d),
     'E': lambda val, p, d: ((p[0] + val, p[1]), d),
     'W': lambda val, p, d: ((p[0] - val, p[1]), d),
-    'L': lambda val, p, d: (p, (d[0] * l(val)[0][0] + d[1] * l(val)[0][1], d[0] * l(val)[1][0] + d[1] * l(val)[1][1])),
-    'R': lambda val, p, d: (p, (d[0] * r(val)[0][0] + d[1] * r(val)[0][1], d[0] * r(val)[1][0] + d[1] * r(val)[1][1])),
+    'L': lambda val, p, d: (p, rotate(d, 360-val)),
+    'R': lambda val, p, d: (p, rotate(d, val)),
     'F': lambda val, p, d: ((p[0] + d[0] * val, p[1] + d[1] * val), d),
 }
 
