@@ -1,0 +1,7 @@
+parts:
+  - files: 
+    - filename: "first_part.hs"
+      language: "haskell"
+  - files:
+    - filename: "second_part.hs"
+      language: "haskell"
