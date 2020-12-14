@@ -21,24 +21,24 @@ def parse_mem(mem: str) -> Tuple[int, int]:
     else:
         raise Exception("parsing memory error")
 
-def apply_mask(address: int, mask: str) -> List[int]:
-    v_str = str(bin(address)[2:]).zfill(MASK_SIZE)
+def apply_mask(address: int, mask: str) -> List[str]:
+    v_str = bin(address)[2:].zfill(MASK_SIZE)
     q_address = [TABLE[(v_str[i], mask[i])] for i in range(MASK_SIZE)]
     x_pos =  [i for i, c in enumerate(q_address) if c == 'X']
-    addresses: List[int] = []
+    addresses: List[str] = []
     for comb in itertools.product(['0', '1'], repeat=len(x_pos)):
         tmp_address = list(q_address)
         for i, bit in enumerate(comb):
             tmp_address[x_pos[i]] = bit
-        addresses.append(int(''.join(tmp_address), 2))
+        addresses.append(''.join(tmp_address))
     
     return addresses
         
 
 
 
-mask: str = 'X' * MASK_SIZE
-memory: Dict[int, int] = dict()
+mask = 'X' * MASK_SIZE
+memory: Dict[str, int] = dict()
 entry = input()
 while entry != '-':
     if entry.startswith('mask'):
@@ -48,4 +48,4 @@ while entry != '-':
         memory.update({address: value for address in apply_mask(address, mask)})
     entry = input()
 
-print(sum(v for v in memory.values()))
+print(sum(memory.values()))

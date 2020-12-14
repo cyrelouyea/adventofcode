@@ -26,7 +26,7 @@ def apply_mask(value: int, mask: str) -> int:
 
 
 
-mask: str = 'X' * MASK_SIZE
+mask = 'X' * MASK_SIZE
 memory: Dict[int, int] = dict()
 entry = input()
 while entry != '-':
@@ -37,4 +37,4 @@ while entry != '-':
         memory[address] = apply_mask(value, mask)
     entry = input()
 
-print(sum(v for v in memory.values()))
+print(sum(memory.values()))
