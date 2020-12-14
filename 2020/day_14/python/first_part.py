@@ -35,6 +35,8 @@ while entry != '-':
     elif entry.startswith('mem'):
         address, value = parse_mem(entry)
         memory[address] = apply_mask(value, mask)
+    else:
+        raise Exception(f"unexpected input: {entry}")
     entry = input()
 
 print(sum(memory.values()))

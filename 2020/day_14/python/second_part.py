@@ -33,8 +33,6 @@ def apply_mask(address: int, mask: str) -> List[str]:
         addresses.append(''.join(tmp_address))
     
     return addresses
-        
-
 
 
 mask = 'X' * MASK_SIZE
@@ -46,6 +44,8 @@ while entry != '-':
     elif entry.startswith('mem'):
         address, value = parse_mem(entry)
         memory.update({address: value for address in apply_mask(address, mask)})
+    else:
+        raise Exception(f"unexpected input: {entry}")
     entry = input()
 
 print(sum(memory.values()))
