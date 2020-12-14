@@ -9,11 +9,6 @@ data Password = Password
     pwd :: [Char]
   }
 
-getMin (Password min _ _ _) = min
-getMax (Password _ max _ _) = max
-getLetter (Password _ _ letter _) = letter
-getPassword (Password _ _ _ pwd) = pwd
-
 isValid :: Password -> Bool
 isValid (Password min max letter pwd) = do
   let count = countLetterInStr pwd letter

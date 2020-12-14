@@ -9,10 +9,6 @@ data Password = Password
     pwd :: [Char]
   }
 
-getFirst (Password first _ _ _) = first
-getSecond (Password _ second _ _) = second
-getLetter (Password _ _ letter _) = letter
-getPassword (Password _ _ _ pwd) = pwd
 
 isValid :: Password -> Bool
 isValid (Password first second letter pwd) = 
