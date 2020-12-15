@@ -1,4 +1,6 @@
 languages:
   - name: Python
     folder: python
+  - name: Haskell
+    folder: haskell
 statement: "puzzle.md"
