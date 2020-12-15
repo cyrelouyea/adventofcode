@@ -15,19 +15,12 @@ for number in numbers[:-1]:
     
     
 next_number = numbers[-1]
-
 while current_turn < NB_TURN:
     if next_number in game:
-        n = game[next_number]
-        game[next_number] = current_turn
-        next_number = current_turn - n
+        game[next_number], next_number = current_turn, current_turn - game[next_number]
     else:
-        game[next_number] = current_turn
-        next_number = DEFAULT_NUMBER
+        game[next_number], next_number = current_turn, DEFAULT_NUMBER
     current_turn += 1
 
+
 print("solutions:", next_number)
-
-
-
-
