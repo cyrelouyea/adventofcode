@@ -1,7 +1,7 @@
 module Main where
 
-import System.IO
 import qualified Data.IntSet as Set
+import System.IO
 
 bitSize = 10
 
@@ -24,7 +24,7 @@ findFirst f l
   | otherwise = findFirst f (tail l)
 
 decodeChar :: Char -> Int
-decodeChar c 
+decodeChar c
   | c == 'F' = 0
   | c == 'B' = 1
   | c == 'L' = 0
@@ -33,9 +33,10 @@ decodeChar c
 
 decodeSeat :: [Char] -> Int
 decodeSeat seat = do
-  sum $ 
-    zipWith  
-      (\i b -> b * 2 ^ (bitSize - i - 1)) [0..]
+  sum $
+    zipWith
+      (\i b -> b * 2 ^ (bitSize - i - 1))
+      [0 ..]
       (map decodeChar seat)
 
 doReadFile :: IO [[Char]]
