@@ -77,9 +77,14 @@ for ticket in valid_nearby_tickets:
         valid_fields = {field for field, rule in rules.items() if ticket_value_is_valid(value, rule)}
         possible_fields_for_pos[pos].fields.intersection_update(valid_fields)
 
+# Get positions that contains only one possible field
+unique_possible_fields_pos = [
+    pos for pos in range(len(my_ticket)) 
+    if is_unique_and_not_ok(possible_fields_for_pos[pos])
+]
 
-# removing field from others position if it's the only possibilities for this position
-for pos in (pos for pos in range(len(my_ticket)) if is_unique_and_not_ok(possible_fields_for_pos[pos])):
+# removing these 'ok' field from others position
+for pos in unique_possible_fields_pos:
     fields_to_remove = [(pos, next(iter(possible_fields_for_pos[pos].fields)))]
     while len(fields_to_remove) != 0:
         pos_to_remove, to_remove = fields_to_remove.pop()
