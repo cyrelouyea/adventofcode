@@ -11,6 +11,9 @@ class PossibleFields:
         self.ok = ok
         self.fields = fields
 
+    def is_unique_and_not_ok(self) -> bool:
+        return len(self.fields) == 1 and not self.ok
+
 
 RULE_PATTERN = re.compile(r'(?P<field>.+):\s(?P<f_min>\d+)\-(?P<f_max>\d+)\sor\s(?P<s_min>\d+)\-(?P<s_max>\d+)')
 FIELDS_TO_MULTIPLY = 'departure'
@@ -27,8 +30,6 @@ def ticket_is_valid(ticket: Ticket, rules: Rules) -> bool:
     )
 
 
-def is_unique_and_not_ok(possible_fields: PossibleFields) -> bool:
-    return len(possible_fields.fields) == 1 and not possible_fields.ok
 
 
 rules: Rules = dict()
@@ -83,7 +84,7 @@ for ticket in valid_nearby_tickets:
 # Get positions that contains only one possible field
 unique_possible_fields_pos = [
     pos for pos in range(len(my_ticket)) 
-    if is_unique_and_not_ok(possible_fields_for_pos[pos])
+    if possible_fields_for_pos[pos].is_unique_and_not_ok()
 ]
 
 # removing these 'ok' field from others position
@@ -95,7 +96,7 @@ for pos in unique_possible_fields_pos:
         for i, fields in enumerate(possible_fields_for_pos):
             if i != pos_to_remove:
                 possible_fields_for_pos[i].fields.discard(to_remove)
-                if is_unique_and_not_ok(possible_fields_for_pos[i]):
+                if possible_fields_for_pos[i].is_unique_and_not_ok():
                     fields_to_remove.append((i, next(iter(possible_fields_for_pos[i].fields))))
 
 
