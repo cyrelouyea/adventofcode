@@ -71,11 +71,14 @@ possible_fields_for_pos = [
     PossibleFields(ok=False, fields=set(rules.keys())) for i in range(len(my_ticket))
 ]
 
-# removing invalid possible fields for each position
+# removing invalid fields for each position
 for ticket in valid_nearby_tickets:
     for pos, value in enumerate(ticket):
-        valid_fields = {field for field, rule in rules.items() if ticket_value_is_valid(value, rule)}
-        possible_fields_for_pos[pos].fields.intersection_update(valid_fields)
+        possible_fields_for_pos[pos] \
+            .fields.intersection_update({
+                field for field, rule in rules.items() 
+                if ticket_value_is_valid(value, rule)
+            })
 
 # Get positions that contains only one possible field
 unique_possible_fields_pos = [
