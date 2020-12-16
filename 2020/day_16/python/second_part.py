@@ -89,15 +89,16 @@ unique_possible_fields_pos = [
 
 # removing these 'ok' field from others position
 for pos in unique_possible_fields_pos:
-    fields_to_remove = [(pos, next(iter(possible_fields_for_pos[pos].fields)))]
-    while len(fields_to_remove) != 0:
-        pos_to_remove, to_remove = fields_to_remove.pop()
+    pos_fields_to_remove = [pos]
+    while len(pos_fields_to_remove) != 0:
+        pos_to_remove = pos_fields_to_remove.pop()
         possible_fields_for_pos[pos_to_remove].ok = True
+        to_remove = next(iter(possible_fields_for_pos[pos_to_remove].fields))
         for i, fields in enumerate(possible_fields_for_pos):
             if i != pos_to_remove:
                 possible_fields_for_pos[i].fields.discard(to_remove)
                 if possible_fields_for_pos[i].is_unique_and_not_ok():
-                    fields_to_remove.append((i, next(iter(possible_fields_for_pos[i].fields))))
+                    pos_fields_to_remove.append(i)
 
 
 print(
