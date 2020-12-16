@@ -14,7 +14,7 @@ sin = {
     270: -1
 }
 
-def mat_rot(deg):
+def mat_rot(deg: int):
     return (
         (cos[deg], -sin[deg]),
         (sin[deg], cos[deg]),
@@ -44,7 +44,6 @@ while instruction != '-':
     action = instruction[0]
     val = int(instruction[1:])
     pos, waypoint = actions[action](val, pos, waypoint)
-    print(action, val, pos, waypoint)
     instruction = input()
 
-print("solution:", pos, waypoint, abs(pos[0]) + abs(pos[1]))
+print("solution:", abs(pos[0]) + abs(pos[1]))

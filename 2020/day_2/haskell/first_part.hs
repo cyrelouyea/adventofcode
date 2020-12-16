@@ -9,14 +9,19 @@ data Password = Password
     pwd :: [Char]
   }
 
+main = do
+  passwords <- doReadFile
+  print (length (filter isValid passwords))
+  return ()
+
 isValid :: Password -> Bool
-isValid (Password min max letter pwd) = do
-  let count = countLetterInStr pwd letter
+isValid (Password min max letter pwd) =
   (min <= count) && (count <= max)
+  where
+    count = countLetterInStr pwd letter
 
 doReadFile :: IO [Password]
-doReadFile = do
-  withFile "input" ReadMode doReadLine
+doReadFile = withFile "input" ReadMode doReadLine
 
 doReadLine :: Handle -> IO [Password]
 doReadLine hFile = do
@@ -29,41 +34,37 @@ doReadLine hFile = do
       return (parseLine line : rest)
 
 parseLine :: [Char] -> Password
-parseLine line = do
-  let (min, r1) = takeMin line
-  let (max, r2) = takeMax r1
-  let (letter, pwd) = takeLetter r2
-  Password min max letter pwd
+parseLine line = Password min max letter pwd
+  where
+    (min, r1) = takeFirst line
+    (max, r2) = takeSecond r1
+    (letter, pwd) = takeLetter r2
 
-takeMin :: [Char] -> (Int, [Char])
-takeMin line = do
-  let (min, rest) = splitFirst line '-'
-  (read min, rest)
+takeFirst :: [Char] -> (Int, [Char])
+takeFirst line = (read min, rest)
+  where
+    (min, rest) = splitFirst line '-'
 
-takeMax :: [Char] -> (Int, [Char])
-takeMax line = do
-  let (max, rest) = splitFirst line ' '
-  (read max, rest)
+takeSecond :: [Char] -> (Int, [Char])
+takeSecond line = (read max, rest)
+  where
+    (max, rest) = splitFirst line ' '
 
 takeLetter :: [Char] -> (Char, [Char])
-takeLetter line = do
-  let (letter, rest) = splitFirst line ':'
-  (head letter, dropWhile (==' ') rest)
+takeLetter line = (head letter, dropWhile (== ' ') rest)
+  where
+    (letter, rest) = splitFirst line ':'
 
 splitFirst :: [Char] -> Char -> ([Char], [Char])
-splitFirst s l 
+splitFirst s l
   | null s = ("", "")
   | head s == l = ("", tail s)
-  | otherwise = do
-      let (first, last) = splitFirst (tail s) l
-      (head s : first, last)
+  | otherwise = (head s : first, last)
+  where
+    (first, last) = splitFirst (tail s) l
 
 countLetterInStr :: [Char] -> Char -> Int
 countLetterInStr s l
   | null s = 0
   | head s == l = 1 + countLetterInStr (tail s) l
   | otherwise = countLetterInStr (tail s) l
-    
-main = do
-  passwords <- doReadFile
-  print(length (filter isValid passwords))

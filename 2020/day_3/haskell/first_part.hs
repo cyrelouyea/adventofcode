@@ -2,24 +2,24 @@ module Main where
 
 import System.IO
 
-data Slope = Slope { right::Int, down::Int }
+data Slope = Slope {right :: Int, down :: Int}
 
 main :: IO ()
 main = do
   m <- doReadFile
-  print(doTakeToboggan m 0 (Slope 3 1))
+  print (doTakeToboggan m 0 (Slope 3 1))
 
 doTakeToboggan :: [[Char]] -> Int -> Slope -> Int
-doTakeToboggan m x (Slope right down) = do
-  let m1 = goDown m down
-  if null m1 
-    then 0
-  else do
+doTakeToboggan m x (Slope right down)
+  | null m1 = 0
+  | otherwise =
     let newX = rem (x + right) (length (head m1))
-    let c = head m1 !! newX
-    if c == '#' 
-      then 1 + doTakeToboggan m1 newX (Slope right down)
-      else doTakeToboggan m1 newX (Slope right down)
+        c = head m1 !! newX
+     in if c == '#'
+          then 1 + doTakeToboggan m1 newX (Slope right down)
+          else doTakeToboggan m1 newX (Slope right down)
+  where
+    m1 = goDown m down
 
 goDown :: [[Char]] -> Int -> [[Char]]
 goDown m y
@@ -27,8 +27,7 @@ goDown m y
   | otherwise = goDown (tail m) (y - 1)
 
 doReadFile :: IO [[Char]]
-doReadFile = do
-  withFile "input" ReadMode doReadLine
+doReadFile = withFile "input" ReadMode doReadLine
 
 doReadLine :: Handle -> IO [[Char]]
 doReadLine hFile = do
