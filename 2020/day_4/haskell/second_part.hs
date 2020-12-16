@@ -14,7 +14,7 @@ main :: IO ()
 main = do
   m <- doReadFile
   let passports = parsePassports m
-  print $ length $ filter isValid passports
+  print $ length $ filter (`isValid` requiredFields) passports
   return ()
 
 requiredFields :: [PassportRule]
@@ -31,15 +31,12 @@ requiredFields =
 hairColors :: Set.Set [Char]
 hairColors = Set.fromList ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
 
-isValid :: Passport -> Bool
-isValid p = isValid' p requiredFields
-
-isValid' :: Passport -> [PassportRule] -> Bool
-isValid' p rf =
+isValid :: Passport -> [PassportRule] -> Bool
+isValid p rf =
   null rf
     || case mvalue of
       Nothing -> False
-      Just value -> check value && isValid' p (tail rf)
+      Just value -> check value && isValid p (tail rf)
   where
     mvalue = Map.lookup field p
     field = (fst . head) rf
