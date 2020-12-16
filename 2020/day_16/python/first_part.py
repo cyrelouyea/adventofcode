@@ -15,7 +15,8 @@ def ticket_value_is_valid(value: int, rule: Rule) -> bool:
 
 def ticket_error_rate(ticket: Ticket, rules: Rules) -> int:
     return sum(
-        v for v in ticket if not any(ticket_value_is_valid(v, rule) for rule in rules.values())
+        v for v in ticket 
+        if not any(ticket_value_is_valid(v, rule) for rule in rules.values())
     )
 
 
