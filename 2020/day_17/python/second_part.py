@@ -3,52 +3,50 @@ from collections import defaultdict
 from typing import Set, Dict, Tuple
 
 
-Coordinate = Tuple[int, ...]
-
-NB_DIM = 4
-NEIGHBOURS_AND_ITSELF = set(itertools.product((-1, 0, 1), repeat=NB_DIM))
-NEIGHBOURS = NEIGHBOURS_AND_ITSELF - {(0,) * NB_DIM}
-NB_CYCLE = 6
+Coordinates = Tuple[int, ...]
 
 
-def add_coordinate(c1: Coordinate, c2: Coordinate) -> Coordinate:
+NB_DIMS = 4
+NEIGHBOURS = set(itertools.product((-1, 0, 1), repeat=NB_DIMS)) - {(0,) * NB_DIMS}
+NB_CYCLES = 6
+
+
+def add_coordinate(c1: Coordinates, c2: Coordinates) -> Coordinates:
     return tuple(list(map(sum, zip(c1, c2))))
 
 
-actives: Set[Coordinate] = set()
+actives: Set[Coordinates] = set()
 
 y = 0
 entry = input()
 while entry != '-':
     actives.update({
-        (x, y,) + ((0,) * (NB_DIM - 2)) for x, c in enumerate(entry)
+        (x, y,) + ((0,) * (NB_DIMS - 2)) for x, c in enumerate(entry)
         if c == '#'
     })
     y += 1
     entry = input()
 
-for _ in range(NB_CYCLE):
-    to_check = {
-        add_coordinate(coord, jump)
-        for coord in actives
-        for jump in NEIGHBOURS_AND_ITSELF
-    }
-    
-    nb_active_neighbours: Dict[Coordinate, int] = defaultdict(lambda: 0)
+for _ in range(NB_CYCLES):
+    to_check: Set[Coordinates] = set()
+    nb_active_neighbours: Dict[Coordinates, int] = defaultdict(lambda: 0)
+    actives_to_remove: Set[Coordinates] = set()
+    actives_to_add: Set[Coordinates] = set()
 
-    for coord in actives:
+    for coords in actives:
         for jump in NEIGHBOURS:
-            nb_active_neighbours[add_coordinate(coord, jump)] += 1
+            n_coords = add_coordinate(coords, jump)
+            nb_active_neighbours[n_coords] += 1
+            to_check.add(n_coords)
+        to_check.add(coords)
 
-    actives_to_remove: Set[Coordinate] = set()
-    actives_to_add: Set[Coordinate] = set()
-    for coord in to_check:
-        if coord in actives:
-            if not (2 <= nb_active_neighbours[coord] <= 3):
-                actives_to_remove.add(coord)
+    for coords in to_check:
+        if coords in actives:
+            if not (2 <= nb_active_neighbours[coords] <= 3):
+                actives_to_remove.add(coords)
         else:
-            if nb_active_neighbours[coord] == 3:
-                actives_to_add.add(coord)
+            if nb_active_neighbours[coords] == 3:
+                actives_to_add.add(coords)
     
     actives.update(actives_to_add)
     actives.difference_update(actives_to_remove)
