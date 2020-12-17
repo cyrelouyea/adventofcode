@@ -12,7 +12,7 @@ NB_CYCLES = 6
 
 
 def add_coordinate(c1: Coordinates, c2: Coordinates) -> Coordinates:
-    return tuple(list(map(sum, zip(c1, c2))))
+    return tuple(map(sum, zip(c1, c2)))
 
 
 actives: Set[Coordinates] = set()
