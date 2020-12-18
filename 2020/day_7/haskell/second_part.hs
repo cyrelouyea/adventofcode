@@ -2,7 +2,7 @@ module Main where
 
 import Data.List
 import qualified Data.Map as Map
-import Data.Maybe
+import qualified Data.Maybe as Maybe
 import System.IO
 
 type BagContent = Map.Map String Int
@@ -24,7 +24,7 @@ nbBagsInside bagName bags
         (\(bn, nb) -> nb * (1 + nbBagsInside bn bags))
         (Map.assocs bagContents)
   where
-    bagContents = fromMaybe Map.empty (Map.lookup bagName bags)
+    bagContents = Maybe.fromMaybe Map.empty (Map.lookup bagName bags)
 
 parseBags :: [String] -> Bags
 parseBags bs
