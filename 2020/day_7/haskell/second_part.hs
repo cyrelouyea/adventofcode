@@ -31,7 +31,7 @@ parseBags bs
   | null bs = Map.empty
   | otherwise =
     Map.union
-      (Map.fromList [parseBag (head bs)])
+      (uncurry Map.singleton $ parseBag (head bs))
       (parseBags (tail bs))
 
 parseBag :: String -> (String, BagContent)
