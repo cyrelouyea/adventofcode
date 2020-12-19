@@ -23,7 +23,7 @@ def parse_rule(entry: str) -> Tuple[int, Rule]:
 def message_match(message: str, index: int, rule_id: int, rules: Dict[int, Rule], must_end = False) -> List[int]:
     possibilities: List[int] = []
     if len(message) == index:
-        return []
+        return possibilities
 
     for subrule in rules[rule_id]:
         if isinstance(subrule, CharRule) and message[index] == subrule:
@@ -38,10 +38,7 @@ def message_match(message: str, index: int, rule_id: int, rules: Dict[int, Rule]
             # donc pour chaque position viable, 
             # il faut regarder quelles sont les positions viables avec la règle suivante
             while len(sb) > 0:
-                new_pss: List[int] = []
-                for ps in pss:
-                    new_pss.extend(message_match(message, ps, sb[0], rules))
-                pss = new_pss
+                pss = [p for ps in pss for p in message_match(message, ps, sb[0], rules)]
                 sb = sb[1:]
          
             possibilities.extend([ps for ps in pss if not must_end or len(message) == ps])
